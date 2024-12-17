@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - "**"
-  workflow_dispatch:
 env:
   APP_NAME: spring-petclinic
   NAMESPACE: ldonley
@@ -197,10 +196,9 @@ jobs:
       - name: Publish evidence
         uses: cloudbees-io/publish-evidence-item@v1
         with:
-          content: |-
-            ${{vars.PETCLINIC_SCA_SCAN_RESULTS}} 
-          format: MARKDOWN                  
-    needs: 
+          content: "${{vars.PETCLINIC_SCA_SCAN_RESULTS}} "
+          format: MARKDOWN
+    needs:
       - evidence-collection
   exit_gate:
     environment: ldonley_dev
@@ -216,7 +214,7 @@ jobs:
         name: Manual Approval
         run: |
           echo "Manual approval required before proceeding to deployment."
-    needs: 
+    needs:
       - deploy_dev
   smokeTest_dev:
     steps:
@@ -231,7 +229,7 @@ jobs:
         with:
           content: "${{vars.PETCLINIC_SMOKETEST_DEV_RESULTS}} "
           format: MARKDOWN
-    needs: 
+    needs:
       - deploy_dev
   deploy_dev:
     environment: ldonley_dev
@@ -297,7 +295,7 @@ jobs:
 
             Running spring-petclinic:${{ cloudbees.scm.sha }}
           format: MARKDOWN
-    needs: 
+    needs:
       - exit_gate
   smokeTest_qa:
     steps:
@@ -312,7 +310,7 @@ jobs:
         with:
           content: "${{vars.PETCLINIC_SMOKETEST_QA_RESULTS}} "
           format: MARKDOWN
-    needs: 
+    needs:
       - deploy_qa
   deploy_prod:
     environment: ldonley_prod
@@ -345,7 +343,7 @@ jobs:
 
             Running spring-petclinic:${{ cloudbees.scm.sha }}
           format: MARKDOWN
-    needs: 
+    needs:
       - deploy_qa
   smokeTest_prod:
     steps:
@@ -360,5 +358,5 @@ jobs:
         with:
           content: "${{vars.PETCLINIC_SMOKETEST_PROD_RESULTS}} "
           format: MARKDOWN
-    needs: 
+    needs:
       - deploy_prod
